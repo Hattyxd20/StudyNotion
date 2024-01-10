@@ -1,21 +1,23 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'
-import { deleteAccount } from '../../../../services/operations/settingsApi';
-import {FiTrash2} from "react-icons/fi"
+import { FiTrash2 } from "react-icons/fi"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
+import { deleteProfile } from "../../../../services/operations/SettingsAPI"
 
-const DeleteAccount = () => {
-   const {token} = useSelector(state => state.auth)
-   const dispatch = useDispatch();
-   const navigate = useNavigate();
+export default function DeleteAccount() {
+  const { token } = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-   const handleDeleteAccount = () => {
-        dispatch(deleteAccount(token,navigate))
-   }
+  async function handleDeleteAccount() {
+    try {
+      dispatch(deleteProfile(token, navigate))
+    } catch (error) {
+      console.log("ERROR MESSAGE - ", error.message)
+    }
+  }
 
-
-    return (
+  return (
     <>
       <div className="my-10 flex flex-row gap-x-5 rounded-md border-[1px] border-pink-700 bg-pink-900 p-8 px-12">
         <div className="flex aspect-square h-14 w-14 items-center justify-center rounded-full bg-pink-700">
@@ -44,7 +46,3 @@ const DeleteAccount = () => {
     </>
   )
 }
-
-
-
-export default DeleteAccount

@@ -1,56 +1,64 @@
-import React from 'react'
-import { Route ,Routes} from 'react-router-dom'
-import Home from './pages/Home'
+import { useEffect } from "react"
 import "./App.css"
-import Navbar from './components/common/Navbar'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
-import ForgotPassword from './pages/ForgotPassword'
-import OpenRoute from './components/core/Auth/OpenRoute'
-import UpdatePassword from './pages/UpdatePassword'
-import VerifyEmail from './pages/VerifyEmail'
-import About from './pages/About'
-import Sidebar from './components/core/Dashboard/Sidebar'
-import MyProfile from './components/core/Dashboard/MyProfile'
-import ProtectedRoute from './components/core/Auth/ProtectedRoute'
-import Error from './pages/Error'
-import Dashboard from './pages/Dashboard'
-import Settings from './components/core/Dashboard/Settings'
-import EnrolledCourses from './components/core/Dashboard/EnrolledCourses'
-import Cart from './components/core/Dashboard/Cart'
-import { useSelector } from 'react-redux'
-import { ACCOUNT_TYPE } from './utils/constants'
-import AddCourse from './components/core/Dashboard/AddCourse/index'
-import MyCourses from './components/core/Dashboard/MyCourses/MyCourses'
-import EditCourse from './components/core/Dashboard/EditCourse'
-import Catelog from './pages/Catelog'
-import CourseDetails from './pages/CourseDetails'
-import ViewCourse from './pages/ViewCourse'
-import VideoDetails from './components/core/ViewCourse/VideoDetails'
-import Instructor from './components/core/Dashboard/InstructorDashboard/Instructor'
-import Contact from './pages/Contact'
-import LinkSlider from './components/common/LinkSlider'
-import CustomSidebar from './components/common/CustomSidebar'
+// Redux
+import { useDispatch, useSelector } from "react-redux"
+// React Router
+import { Route, Routes, useNavigate } from "react-router-dom"
 
+// Components
+import Navbar from "./components/Common/Navbar"
+import OpenRoute from "./components/core/Auth/OpenRoute"
+import PrivateRoute from "./components/core/Auth/PrivateRoute"
+import AddCourse from "./components/core/Dashboard/AddCourse"
+import Cart from "./components/core/Dashboard/Cart"
+import EditCourse from "./components/core/Dashboard/EditCourse"
+import EnrolledCourses from "./components/core/Dashboard/EnrolledCourses"
+import Instructor from "./components/core/Dashboard/Instructor"
+import MyCourses from "./components/core/Dashboard/MyCourses"
+import MyProfile from "./components/core/Dashboard/MyProfile"
+import Settings from "./components/core/Dashboard/Settings"
+import VideoDetails from "./components/core/ViewCourse/VideoDetails"
+import About from "./pages/About"
+import Catalog from "./pages/Catalog"
+import Contact from "./pages/Contact"
+import CourseDetails from "./pages/CourseDetails"
+import Dashboard from "./pages/Dashboard"
+import Error from "./pages/Error"
+import ForgotPassword from "./pages/ForgotPassword"
+// Pages
+import Home from "./pages/Home"
+import Login from "./pages/Login"
+import Signup from "./pages/Signup"
+import UpdatePassword from "./pages/UpdatePassword"
+import VerifyEmail from "./pages/VerifyEmail"
+import ViewCourse from "./pages/ViewCourse"
+import { getUserDetails } from "./services/operations/profileAPI"
+import { ACCOUNT_TYPE } from "./utils/constants"
 
-const App = () => {
-  const {user} = useSelector(state => state.profile)
+function App() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { user } = useSelector((state) => state.profile)
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      const token = JSON.parse(localStorage.getItem("token"))
+      dispatch(getUserDetails(token, navigate))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
-      <div className='w-screen relative min-h-screen bg-richblack-900 flex flex-col font-inter'>
-         <Navbar/>
-        
-         <Routes>
-             <Route path='/catelog/:catalogName' element={<Catelog/>}/>
-             <Route path='/courses/:courseId' element={<CourseDetails/>}/>
-             <Route path="/contact" element={<Contact />} />
-             <Route path="/" element={<Home/>}></Route>
-             <Route path='/about' element={<About/>}></Route>
-             {/* <Route path='/sidebar' element={<CustomSidebar/>}></Route> */}
-
-          
-
-              
-               <Route
+    <div className="flex min-h-screen w-screen flex-col bg-richblack-900 font-inter">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="courses/:courseId" element={<CourseDetails />} />
+        <Route path="catalog/:catalogName" element={<Catalog />} />
+        {/* Open Route - for Only Non Logged in User */}
+        <Route
           path="login"
           element={
             <OpenRoute>
@@ -82,8 +90,7 @@ const App = () => {
             </OpenRoute>
           }
         />
-
-          <Route
+        <Route
           path="verify-email"
           element={
             <OpenRoute>
@@ -91,38 +98,48 @@ const App = () => {
             </OpenRoute>
           }
         />
- 
-
-       <Route 
-        path=''
-        element={<ProtectedRoute>
-            <Dashboard/>
-        </ProtectedRoute>}>
-            
-
-         <Route path='/dashboard/my-profile' element={<MyProfile/>}/>
-         <Route path='/dashboard/settings' element={<Settings/>}></Route>
-         <Route path='/dashboard/enrolled-courses' element={<EnrolledCourses/>}></Route>
-         <Route path='/dashboard/cart' element={<Cart/>}></Route>
-
-         {user?.accountType === ACCOUNT_TYPE.INSTRUCTOR &&
-               <>
-               <Route path='/dashboard/instructor' element={<Instructor/>}></Route>
-               <Route path='/dashboard/add-course' element={<AddCourse/>}></Route> 
-               <Route path='/dashboard/my-courses' element={<MyCourses />} />
-               <Route path='/dashboard/edit-course/:courseId' element={<EditCourse/>}/>
-               </>
-         }
-           
-
-         
-       </Route>
-
-         <Route
+        {/* Private Route - for Only Logged in User */}
+        <Route
           element={
-            <ProtectedRoute>
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        >
+          {/* Route for all users */}
+          <Route path="dashboard/my-profile" element={<MyProfile />} />
+          <Route path="dashboard/Settings" element={<Settings />} />
+          {/* Route only for Instructors */}
+          {user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
+            <>
+              <Route path="dashboard/instructor" element={<Instructor />} />
+              <Route path="dashboard/my-courses" element={<MyCourses />} />
+              <Route path="dashboard/add-course" element={<AddCourse />} />
+              <Route
+                path="dashboard/edit-course/:courseId"
+                element={<EditCourse />}
+              />
+            </>
+          )}
+          {/* Route only for Students */}
+          {user?.accountType === ACCOUNT_TYPE.STUDENT && (
+            <>
+              <Route
+                path="dashboard/enrolled-courses"
+                element={<EnrolledCourses />}
+              />
+              <Route path="/dashboard/cart" element={<Cart />} />
+            </>
+          )}
+          <Route path="dashboard/settings" element={<Settings />} />
+        </Route>
+
+        {/* For the watching course lectures */}
+        <Route
+          element={
+            <PrivateRoute>
               <ViewCourse />
-            </ProtectedRoute>
+            </PrivateRoute>
           }
         >
           {user?.accountType === ACCOUNT_TYPE.STUDENT && (
@@ -135,12 +152,10 @@ const App = () => {
           )}
         </Route>
 
-
-      <Route path='*' element={<Error/>}></Route>
-            
-            
-         </Routes>
-      </div>
+        {/* 404 Page */}
+        <Route path="*" element={<Error />} />
+      </Routes>
+    </div>
   )
 }
 

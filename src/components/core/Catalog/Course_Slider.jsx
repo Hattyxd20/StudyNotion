@@ -4,22 +4,18 @@ import { Swiper, SwiperSlide } from "swiper/react"
 
 // Import Swiper styles
 import "swiper/css"
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import "swiper/css/scrollbar"
-
+import "swiper/css/free-mode"
+import "swiper/css/pagination"
 // import "../../.."
 // Import required modules
-import { FreeMode, Pagination ,Autoplay,Scrollbar,A11y} from "swiper/modules"
+import { FreeMode, Pagination ,Autoplay} from "swiper/modules"
 
 // import { getAllCourses } from "../../services/operations/courseDetailsAPI"
-import CourseCard from "./CourseCard"
+import Course_Card from "./Course_Card"
 
 
-const CourseSlider = ({ Courses })  => {
 
-  
-  console.log("inside CourseSlide",Courses)
+function Course_Slider({ Courses }) {
   return (
     <>
       {Courses?.length ? (
@@ -27,7 +23,11 @@ const CourseSlider = ({ Courses })  => {
           slidesPerView={1}
           spaceBetween={25}
           loop={true}
-          modules={[FreeMode, Pagination]}
+          modules={[FreeMode, Pagination,Autoplay]}
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: false,
+          }}
           breakpoints={{
             1024: {
               slidesPerView: 3,
@@ -37,7 +37,7 @@ const CourseSlider = ({ Courses })  => {
         >
           {Courses?.map((course, i) => (
             <SwiperSlide key={i}>
-              <CourseCard course={course} Height={"h-[250px]"} />
+              <Course_Card course={course} Height={"h-[250px]"} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -48,4 +48,4 @@ const CourseSlider = ({ Courses })  => {
   )
 }
 
-export default CourseSlider
+export default Course_Slider

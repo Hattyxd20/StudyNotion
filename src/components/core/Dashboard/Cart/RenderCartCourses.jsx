@@ -3,11 +3,9 @@ import { RiDeleteBin6Line } from "react-icons/ri"
 import ReactStars from "react-rating-stars-component"
 import { useDispatch, useSelector } from "react-redux"
 
-import { removeFromCart } from "../../../../slices/CartSlice"
-import GetAvgRating from "../../../../utils/avgRating"
+import { removeFromCart } from "../../../../slices/cartSlice"
 
-const RenderCartCourses = () =>  {
-
+export default function RenderCartCourses() {
   const { cart } = useSelector((state) => state.cart)
   const dispatch = useDispatch()
   return (
@@ -32,8 +30,8 @@ const RenderCartCourses = () =>  {
               <p className="text-sm text-richblack-300">
                 {course?.category?.name}
               </p>
-              <div className="flex flex-col md:flex-row items-start md:items-center  gap-2">
-                <span className="text-yellow-5">{GetAvgRating(course?.ratingAndReviews)}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-yellow-5">4.5</span>
                 <ReactStars
                   count={5}
                   value={course?.ratingAndReviews?.length}
@@ -66,5 +64,3 @@ const RenderCartCourses = () =>  {
     </div>
   )
 }
-
-export default RenderCartCourses

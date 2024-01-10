@@ -3,10 +3,9 @@ import { useForm } from "react-hook-form"
 import { RxCross2 } from "react-icons/rx"
 import ReactStars from "react-rating-stars-component"
 import { useSelector } from "react-redux"
-import { createRating } from "../../../services/operations/courseDetailsApi"
 
-// import { createRating } from "../../../services/operations/courseDetailsApi"
-import IconBtn from "../../common/Iconbtn"
+import { createRating } from "../../../services/operations/courseDetailsAPI"
+import IconBtn from "../../Common/IconBtn"
 
 export default function CourseReviewModal({ setReviewModal }) {
   const { user } = useSelector((state) => state.profile)
@@ -23,7 +22,7 @@ export default function CourseReviewModal({ setReviewModal }) {
   useEffect(() => {
     setValue("courseExperience", "")
     setValue("courseRating", 0)
-   
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const ratingChanged = (newRating) => {
@@ -31,20 +30,16 @@ export default function CourseReviewModal({ setReviewModal }) {
     setValue("courseRating", newRating)
   }
 
- 
   const onSubmit = async (data) => {
-
-      await createRating(
-         {
-           courseId:courseEntireData._id,
-           rating:data.courseRating,
-           review:data.courseExperience
-         }
-         ,
-         token
-      )
-
-      setReviewModal(false)
+    await createRating(
+      {
+        courseId: courseEntireData._id,
+        rating: data.courseRating,
+        review: data.courseExperience,
+      },
+      token
+    )
+    setReviewModal(false)
   }
 
   return (
@@ -91,6 +86,7 @@ export default function CourseReviewModal({ setReviewModal }) {
               </label>
               <textarea
                 id="courseExperience"
+                sp
                 placeholder="Add Your Experience"
                 {...register("courseExperience", { required: true })}
                 className="form-style resize-x-none min-h-[130px] w-full"

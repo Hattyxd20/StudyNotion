@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-
-import GetAvgRating from '../../utils/avgRating'
+import React, { useEffect, useState } from "react"
+// Icons
 import { FaRegStar, FaStar } from "react-icons/fa"
-import RatingStars from '../common/RatingStars'
+import ReactStars from "react-rating-stars-component"
+import { Link } from "react-router-dom"
 
-const CourseCard = ({course,Height}) => {
+import GetAvgRating from "../../../utils/avgRating"
+import RatingStars from "../../Common/RatingStars"
 
-
- 
+function Course_Card({ course, Height }) {
+  // const avgReviewCount = GetAvgRating(course.ratingAndReviews)
+  // console.log(course.ratingAndReviews)
   const [avgReviewCount, setAvgReviewCount] = useState(0)
   useEffect(() => {
-    const count  = GetAvgRating(course.ratingAndReviews)
-    console.log("Inside CourseCard",count)
+    const count = GetAvgRating(course.ratingAndReviews)
     setAvgReviewCount(count)
   }, [course])
+  // console.log("count............", avgReviewCount)
+
   return (
-     <>
-         <Link to={`/courses/${course._id}`}>
+    <>
+      <Link to={`/courses/${course._id}`}>
         <div className="">
           <div className="rounded-lg">
             <img
@@ -32,13 +34,13 @@ const CourseCard = ({course,Height}) => {
               {course?.instructor?.firstName} {course?.instructor?.lastName}
             </p>
             <div className="flex items-center gap-2">
-              <span className="text-yellow-5 text-lg">{avgReviewCount || 0}</span>
-              {/* <RatingStars
+              <span className="text-yellow-5">{avgReviewCount || 0}</span>
+              {/* <ReactStars
                 count={5}
                 value={avgReviewCount || 0}
                 size={20}
                 edit={false}
-                activeColor="#ffd700" 
+                activeColor="#ffd700"
                 emptyIcon={<FaRegStar />}
                 fullIcon={<FaStar />}
               /> */}
@@ -51,8 +53,8 @@ const CourseCard = ({course,Height}) => {
           </div>
         </div>
       </Link>
-   </>
+    </>
   )
 }
 
-export default CourseCard
+export default Course_Card

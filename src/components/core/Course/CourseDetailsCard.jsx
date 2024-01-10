@@ -6,9 +6,8 @@ import { FaShareSquare } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
-import { addToCart } from "../../../slices/CartSlice"
+import { addToCart } from "../../../slices/cartSlice"
 import { ACCOUNT_TYPE } from "../../../utils/constants"
-import ConfirmationModal from "../../common/ConformationModal"
 
 // const CourseIncludes = [
 //   "8 hours on-demand video",
@@ -23,8 +22,6 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-
-  
   const {
     thumbnail: ThumbnailImage,
     price: CurrentPrice,
@@ -43,7 +40,6 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
     }
     if (token) {
       dispatch(addToCart(course))
-     
       return
     }
     setConfirmationModal({
@@ -76,9 +72,9 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
           </div>
           <div className="flex flex-col gap-4">
             <button
-              className="cursor-pointer rounded-md bg-yellow-50 px-[20px] py-[8px] font-semibold text-richblack-900"
+              className="yellowButton"
               onClick={
-                user && course?.studentsEnrolled?.includes(user?._id)
+                user && course?.studentsEnrolled.includes(user?._id)
                   ? () => navigate("/dashboard/enrolled-courses")
                   : handleBuyCourse
               }
@@ -88,7 +84,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                 : "Buy Now"}
             </button>
             {(!user || !course?.studentsEnrolled.includes(user?._id)) && (
-              <button onClick={handleAddToCart} className="cursor-pointer rounded-md bg-richblack-800 px-[20px] py-[8px] font-semibold text-richblack-5">
+              <button onClick={handleAddToCart} className="blackButton">
                 Add to Cart
               </button>
             )}
@@ -106,13 +102,13 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
             <div className="flex flex-col gap-3 text-sm text-caribbeangreen-100">
               {course?.instructions?.map((item, i) => {
                 return (
-                  <p className={`flex gap-2 items-center`} key={i}>
+                  <p className={`flex gap-2`} key={i}>
                     <BsFillCaretRightFill />
                     <span>{item}</span>
                   </p>
                 )
               })}
-            </div> 
+            </div>
           </div>
           <div className="text-center">
             <button
@@ -124,8 +120,6 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
           </div>
         </div>
       </div>
-
-     
     </>
   )
 }

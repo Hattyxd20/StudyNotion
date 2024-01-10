@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Table, Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table"
 
-import { setCourse, setEditCourse } from "../../../../slices/CourseSlice"
+import { setCourse, setEditCourse } from "../../../../slices/courseSlice"
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css"
 import { useState } from "react"
 import { FaCheck } from "react-icons/fa"
@@ -9,18 +9,14 @@ import { FiEdit2 } from "react-icons/fi"
 import { HiClock } from "react-icons/hi"
 import { RiDeleteBin6Line } from "react-icons/ri"
 import { useNavigate } from "react-router-dom"
-import {formatDate} from "../../../../services/formDate"
-import { useCallback } from "react"
 
-
+import { formatDate } from "../../../../services/formatDate"
 import {
   deleteCourse,
   fetchInstructorCourses,
-} from "../../../../services/operations/courseDetailsApi"
+} from "../../../../services/operations/courseDetailsAPI"
 import { COURSE_STATUS } from "../../../../utils/constants"
-import ConfirmationModal from "../../../common/ConformationModal"
-
-import axios from "axios"
+import ConfirmationModal from "../../../Common/ConfirmationModal"
 
 export default function CoursesTable({ courses, setCourses }) {
   const dispatch = useDispatch()
@@ -28,7 +24,7 @@ export default function CoursesTable({ courses, setCourses }) {
   const { token } = useSelector((state) => state.auth)
   const [loading, setLoading] = useState(false)
   const [confirmationModal, setConfirmationModal] = useState(null)
-  const TRUNCATE_LENGTH = 30
+  const TRUNCATE_LENGTH = 15
 
   const handleCourseDelete = async (courseId) => {
     setLoading(true)
@@ -40,10 +36,6 @@ export default function CoursesTable({ courses, setCourses }) {
     setConfirmationModal(null)
     setLoading(false)
   }
-
-
-
-  
 
   // console.log("All Course ", courses)
 
@@ -78,7 +70,7 @@ export default function CoursesTable({ courses, setCourses }) {
             courses?.map((course) => (
               <Tr
                 key={course._id}
-                className="flex gap-x-10 border-b border-richblack-800 px-6 py-8 "
+                className="flex gap-x-10 border-b border-richblack-800 px-6 py-8"
               >
                 <Td className="flex flex-1 gap-x-4">
                   <img
@@ -86,11 +78,11 @@ export default function CoursesTable({ courses, setCourses }) {
                     alt={course?.courseName}
                     className="h-[148px] w-[220px] rounded-lg object-cover"
                   />
-                  <div className="flex flex-col justify-between">
+                  <div className="flex flex-col justify-between gap-y-1">
                     <p className="text-lg font-semibold text-richblack-5">
                       {course.courseName}
                     </p>
-                    <p className="text-xs text-richblack-300">
+                    <p className="text-xs text-richblack-300 ">
                       {course.courseDescription.split(" ").length >
                       TRUNCATE_LENGTH
                         ? course.courseDescription
@@ -103,7 +95,7 @@ export default function CoursesTable({ courses, setCourses }) {
                       Created: {formatDate(course.createdAt)}
                     </p>
                     {course.status === COURSE_STATUS.DRAFT ? (
-                      <p className="flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-pink-100">
+                      <p className="flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-pink-100 ">
                         <HiClock size={14} />
                         Drafted
                       </p>
@@ -117,12 +109,10 @@ export default function CoursesTable({ courses, setCourses }) {
                     )}
                   </div>
                 </Td>
-
-                <div className="flex flex-row gap-x-16">
                 <Td className="text-sm font-medium text-richblack-100">
                     {course.totalDuration}
                 </Td>
-                <Td className="text-sm font-medium text-richblack-100 ">
+                <Td className="text-sm font-medium text-richblack-100">
                   ₹{course.price}
                 </Td>
                 <Td className="text-sm font-medium text-richblack-100 ">
@@ -159,7 +149,6 @@ export default function CoursesTable({ courses, setCourses }) {
                     <RiDeleteBin6Line size={20} />
                   </button>
                 </Td>
-                </div>
               </Tr>
             ))
           )}

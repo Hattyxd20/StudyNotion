@@ -8,16 +8,16 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   createSection,
   updateSection,
-} from "../../../../../services/operations/courseDetailsApi"
+} from "../../../../../services/operations/courseDetailsAPI"
 import {
   setCourse,
   setEditCourse,
   setStep,
-} from "../../../../../slices/CourseSlice"
-import IconBtn from "../../../../common/Iconbtn"
+} from "../../../../../slices/courseSlice"
+import IconBtn from "../../../../Common/IconBtn"
 import NestedView from "./NestedView"
 
-const CourseBuilderForm = () => {
+export default function CourseBuilderForm() {
   const {
     register,
     handleSubmit,
@@ -26,15 +26,14 @@ const CourseBuilderForm = () => {
   } = useForm()
 
   const { course } = useSelector((state) => state.course)
-  console.log(course)
   const { token } = useSelector((state) => state.auth)
   const [loading, setLoading] = useState(false)
   const [editSectionName, setEditSectionName] = useState(null)
   const dispatch = useDispatch()
 
-  
+  // handle form submission
   const onSubmit = async (data) => {
-   
+    // console.log(data)
     setLoading(true)
 
     let result
@@ -48,7 +47,7 @@ const CourseBuilderForm = () => {
         },
         token
       )
-      
+      // console.log("edit", result)
     } else {
       result = await createSection(
         {
@@ -59,7 +58,7 @@ const CourseBuilderForm = () => {
       )
     }
     if (result) {
-      
+      // console.log("section result", result)
       dispatch(setCourse(result))
       setEditSectionName(null)
       setValue("sectionName", "")
@@ -72,7 +71,7 @@ const CourseBuilderForm = () => {
     setValue("sectionName", "")
   }
 
-   const handleChangeEditSectionName = (sectionId, sectionName) => {
+  const handleChangeEditSectionName = (sectionId, sectionName) => {
     if (editSectionName === sectionId) {
       cancelEdit()
       return
@@ -84,16 +83,15 @@ const CourseBuilderForm = () => {
   const goToNext = () => {
     if (course.courseContent.length === 0) {
       toast.error("Please add atleast one section")
-      return;
+      return
     }
     if (
       course.courseContent.some((section) => section.subSection.length === 0)
     ) {
       toast.error("Please add atleast one lecture in each section")
-      return;
+      return
     }
-     
-    dispatch(setStep(3));
+    dispatch(setStep(3))
   }
 
   const goBack = () => {
@@ -153,13 +151,10 @@ const CourseBuilderForm = () => {
         >
           Back
         </button>
-        <IconBtn disabled={loading} text="Next" handeler={goToNext}>
+        <IconBtn disabled={loading} text="Next" onclick={goToNext}>
           <MdNavigateNext />
         </IconBtn>
       </div>
     </div>
   )
 }
-
-
-export default CourseBuilderForm

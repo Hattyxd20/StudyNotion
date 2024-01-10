@@ -3,21 +3,18 @@ import { useSelector } from "react-redux"
 
 import frameImg from "../../../assets/Images/frame.png"
 import LoginForm from "./LoginForm"
-import SignupForm from "./SignUpForm"
-
+import SignupForm from "./SignupForm"
 
 function Template({ title, description1, description2, image, formType }) {
   const { loading } = useSelector((state) => state.auth)
 
   return (
-    <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center ">
+    <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
       {loading ? (
-        <div className="custom-loader"></div>
+        <div className="spinner"></div>
       ) : (
-        <div className="mx-auto flex w-11/12 max-w-maxContent flex-col-reverse items-center md:items-start justify-between gap-y-12 py-12 md:flex-row md:gap-y-0 md:gap-x-12 backdrop-filter backdrop-blur-sm">
-        
-       
-          <div className=" w-11/12 max-w-[450px] ">
+        <div className="mx-auto flex w-11/12 max-w-maxContent flex-col-reverse justify-between gap-y-12 py-12 md:flex-row md:gap-y-0 md:gap-x-12">
+          <div className="mx-auto w-11/12 max-w-[450px] md:mx-0">
             <h1 className="text-[1.875rem] font-semibold leading-[2.375rem] text-richblack-5">
               {title}
             </h1>
@@ -28,10 +25,8 @@ function Template({ title, description1, description2, image, formType }) {
               </span>
             </p>
             {formType === "signup" ? <SignupForm /> : <LoginForm />}
-            
           </div>
-          
-          <div className="relative w-[80%] md:max-w-[450px] ">
+          <div className="relative mx-auto w-11/12 max-w-[450px] md:mx-0">
             <img
               src={frameImg}
               alt="Pattern"

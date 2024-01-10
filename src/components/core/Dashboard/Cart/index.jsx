@@ -9,8 +9,8 @@ export default function Cart() {
 
   if (paymentLoading)
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="custom-loader"></div>
+      <div className="flex h-[70vh] items-center justify-center">
+        <div className="spinner"></div>
       </div>
     )
 

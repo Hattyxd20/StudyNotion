@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from "react"
 import { AiOutlineDown } from "react-icons/ai"
 
-import CourseSubSectionAccordion from "./CourseSubSectionAccordian"
+import CourseSubSectionAccordion from "./CourseSubSectionAccordion"
 
 export default function CourseAccordionBar({ course, isActive, handleActive }) {
   const contentEl = useRef(null)
 
-  
+  // Accordian state
   const [active, setActive] = useState(false)
   useEffect(() => {
     setActive(isActive?.includes(course._id))
   }, [isActive])
   const [sectionHeight, setSectionHeight] = useState(0)
   useEffect(() => {
-    console.log(contentEl.current.scrollHeight)
     setSectionHeight(active ? contentEl.current.scrollHeight : 0)
   }, [active])
 

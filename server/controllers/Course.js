@@ -249,8 +249,13 @@ exports.getInstructorCourses = async (req, res) => {
        populate:{
          path:"subSection",
          select:"timeDuration"
+       
        }
     })
+    
+
+   
+   
 
    
     

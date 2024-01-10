@@ -1,5 +1,6 @@
 // Helper function to convert total seconds to the duration format
-export const convertSecondsToDuration = (totalSeconds) =>  {
+const convertSecondsToDuration = (totalSeconds) =>  {
+  console.log(totalSeconds)
   const hours = Math.floor(totalSeconds / 3600)
   const minutes = Math.floor((totalSeconds % 3600) / 60)
   const seconds = Math.floor((totalSeconds % 3600) % 60)
@@ -12,3 +13,5 @@ export const convertSecondsToDuration = (totalSeconds) =>  {
     return `${seconds}s`
   }
 }
+
+export default convertSecondsToDuration

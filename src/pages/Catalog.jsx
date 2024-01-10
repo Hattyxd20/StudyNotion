@@ -4,12 +4,12 @@ import { useParams } from "react-router-dom"
 
 // import CourseCard from "../components/Catalog/CourseCard"
 // import CourseSlider from "../components/Catalog/CourseSlider"
-import Footer from "../components/common/Footer"
-import CourseCard from "../components/Catalog/CourseCard"
-import CourseSlider from "../components/Catalog/CourseSlider"
+import Footer from "../components/Common/Footer"
+import Course_Card from "../components/core/Catalog/Course_Card"
+import Course_Slider from "../components/core/Catalog/Course_Slider"
 import { apiConnector } from "../services/apiConnector"
 import { categories } from "../services/apis"
-import { getCatalogPageData } from "../services/operations/pageAndComponentdata"
+import { getCatalogPageData } from "../services/operations/pageAndComponntDatas"
 import Error from "./Error"
 
 function Catalog() {
@@ -48,7 +48,7 @@ function Catalog() {
   if (loading || !catalogPageData) {
     return (
       <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
-        <div className="custom-loader"></div>
+        <div className="spinner"></div>
       </div>
     )
   }
@@ -59,7 +59,7 @@ function Catalog() {
   return (
     <>
       {/* Hero Section */}
-      <div className=" box-content bg-richblack-800 px-4 ">
+      <div className=" box-content bg-richblack-800 px-4">
         <div className="mx-auto flex min-h-[260px] max-w-maxContentTab flex-col justify-center gap-4 lg:max-w-maxContent ">
           <p className="text-sm text-richblack-300">
             {`Home / Catalog / `}
@@ -102,7 +102,7 @@ function Catalog() {
           </p>
         </div>
         <div>
-          <CourseSlider
+          <Course_Slider
             Courses={catalogPageData?.data?.selectedCategory?.courses}
           />
         </div>
@@ -113,7 +113,7 @@ function Catalog() {
           Top courses in {catalogPageData?.data?.differentCategory?.name}
         </div>
         <div className="py-8">
-          <CourseSlider
+          <Course_Slider
             Courses={catalogPageData?.data?.differentCategory?.courses}
           />
         </div>
@@ -127,7 +127,7 @@ function Catalog() {
             {catalogPageData?.data?.mostSellingCourses
               ?.slice(0, 4)
               .map((course, i) => (
-                <CourseCard course={course} key={i} Height={"h-[400px]"} />
+                <Course_Card course={course} key={i} Height={"h-[400px]"} />
               ))}
           </div>
         </div>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import { RxCountdownTimer } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import { sendOtp, signIn } from "../services/operations/authApi";
+import { sendOtp, signUp } from "../services/operations/authAPI";
 import { useNavigate } from "react-router-dom";
 
 function VerifyEmail() {
@@ -33,7 +33,7 @@ function VerifyEmail() {
     } = signupData;
 
     dispatch(
-      signIn(
+      signUp(
         accountType,
         firstName,
         lastName,

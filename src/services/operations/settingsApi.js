@@ -1,15 +1,49 @@
-import { settingsendPoints } from "../apis"
-import { apiConnector } from "../apiConnector"
 import { toast } from "react-hot-toast"
-import { setUser } from "../../slices/ProfileSlice"
-import { logOut } from "./authApi"
 
+import { setUser } from "../../slices/profileSlice"
+import { apiConnector } from "../apiConnector"
+import { settingsEndpoints } from "../apis"
+import { logout } from "./authAPI"
 
-const {UPDATE_PROFILE_API,CHANGE_PASSWORD_API,DELETE_ACCOUNT_API,UPDATE_DISPLAY_PICTURE} = settingsendPoints
+const {
+  UPDATE_DISPLAY_PICTURE_API,
+  UPDATE_PROFILE_API,
+  CHANGE_PASSWORD_API,
+  DELETE_PROFILE_API,
+} = settingsEndpoints
 
+export function updateDisplayPicture(token, formData) {
+  return async (dispatch) => {
+    const toastId = toast.loading("Loading...")
+    try {
+      const response = await apiConnector(
+        "PUT",
+        UPDATE_DISPLAY_PICTURE_API,
+        formData,
+        {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        }
+      )
+      console.log(
+        "UPDATE_DISPLAY_PICTURE_API API RESPONSE............",
+        response
+      )
+
+      if (!response.data.success) {
+        throw new Error(response.data.message)
+      }
+      toast.success("Display Picture Updated Successfully")
+      dispatch(setUser(response.data.data))
+    } catch (error) {
+      console.log("UPDATE_DISPLAY_PICTURE_API API ERROR............", error)
+      toast.error("Could Not Update Display Picture")
+    }
+    toast.dismiss(toastId)
+  }
+}
 
 export function updateProfile(token, formData) {
-  console.log(token)
   return async (dispatch) => {
     const toastId = toast.loading("Loading...")
     try {
@@ -21,7 +55,7 @@ export function updateProfile(token, formData) {
       if (!response.data.success) {
         throw new Error(response.data.message)
       }
-      const userImage = response?.data.updatedUserDetails?.image
+      const userImage = response.data.updatedUserDetails.image
         ? response.data.updatedUserDetails.image
         : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.updatedUserDetails.firstName} ${response.data.updatedUserDetails.lastName}`
       dispatch(
@@ -36,87 +70,43 @@ export function updateProfile(token, formData) {
   }
 }
 
-export const changePassword = (token,formData) => {
-     return async (dispatch) => {
-         const toastId = toast.loading("Loading...")
-         try{
-            const response = await apiConnector("POST",CHANGE_PASSWORD_API,
-                  formData,
-          {Authorization:`Bearer ${token}`})
+export async function changePassword(token, formData) {
+  const toastId = toast.loading("Loading...")
+  try {
+    const response = await apiConnector("POST", CHANGE_PASSWORD_API, formData, {
+      Authorization: `Bearer ${token}`,
+    })
+    console.log("CHANGE_PASSWORD_API API RESPONSE............", response)
 
-            if(response.data.success = false){
-                throw new Error(response.data.message);
-            }
-
-            toast.success("Password Updated Successfully")
-         }
-
-         catch(error){
-             console.log("Update Password Error",error);
-             toast.error("Unable To Update Password")
-         }
-
-         toast.dismiss(toastId);
-     }
+    if (!response.data.success) {
+      throw new Error(response.data.message)
+    }
+    toast.success("Password Changed Successfully")
+  } catch (error) {
+    console.log("CHANGE_PASSWORD_API API ERROR............", error)
+    toast.error(error.response.data.message)
+  }
+  toast.dismiss(toastId)
 }
 
-export const deleteAccount = (token,navigate) => {
-      return async (dispatch) => {
-          const toastId = toast.loading("Loading...");
-          try{
-          const response = await apiConnector("DELETE",DELETE_ACCOUNT_API,{},{Authorization:`Bearer ${token}`})
-          console.log(response)
-          if(!response.data.success){
-              throw new Error(response.data.message)
-          }
-         
-          toast.success("Profile Deleted Successfully")
-          dispatch(logOut(navigate))
+export function deleteProfile(token, navigate) {
+  return async (dispatch) => {
+    const toastId = toast.loading("Loading...")
+    try {
+      const response = await apiConnector("DELETE", DELETE_PROFILE_API, null, {
+        Authorization: `Bearer ${token}`,
+      })
+      console.log("DELETE_PROFILE_API API RESPONSE............", response)
 
-           
-        }
-
-          catch(error){
-              console.log(error);
-              toast.error("Failed To Delete Account")
-          }
-
-          toast.dismiss(toastId)
+      if (!response.data.success) {
+        throw new Error(response.data.message)
       }
-      
-}
-
-export const updateDisplayPicture = (token,formData) => {
-      return async (dispatch) => {
-           const toastId = toast.loading("Loading...")
-           try{
-             const response = await apiConnector('PUT', UPDATE_DISPLAY_PICTURE,
-                formData
-             ,  {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        })
-
-        console.log(response)
-
-             if(!response.data.success){
-                throw new Error(response.data.message);
-             }
-
-             toast.success("Display Picture Upadated Successfully");
-             dispatch(setUser(response.data.data));
-             localStorage.removeItem('user');
-             localStorage.setItem('user',JSON.stringify({...response.data.data}))
-
-           }
-
-         
-
-           catch(error){
-               console.log("Update Picture Error",error);
-               toast.error("Failed to Update Display Picture")
-           }
-
-           toast.dismiss(toastId)
-      }
+      toast.success("Profile Deleted Successfully")
+      dispatch(logout(navigate))
+    } catch (error) {
+      console.log("DELETE_PROFILE_API API ERROR............", error)
+      toast.error("Could Not Delete Profile")
+    }
+    toast.dismiss(toastId)
+  }
 }

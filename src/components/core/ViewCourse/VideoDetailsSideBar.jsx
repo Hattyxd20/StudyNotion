@@ -4,7 +4,7 @@ import { IoIosArrowBack } from "react-icons/io"
 import { useSelector } from "react-redux"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 
-import IconBtn from "../../common/Iconbtn"
+import IconBtn from "../../Common/IconBtn"
 
 export default function VideoDetailsSidebar({ setReviewModal }) {
   const [activeStatus, setActiveStatus] = useState("")
@@ -17,7 +17,7 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
     courseEntireData,
     totalNoOfLectures,
     completedLectures,
-  } = useSelector(state => state.viewCourse)
+  } = useSelector((state) => state.viewCourse)
 
   useEffect(() => {
     ;(() => {
@@ -35,7 +35,7 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
       setActiveStatus(courseSectionData?.[currentSectionIndx]?._id)
       setVideoBarActive(activeSubSectionId)
     })()
-  
+    
   }, [courseSectionData, courseEntireData, location.pathname])
 
   return (
@@ -55,7 +55,7 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
             <IconBtn
               text="Add Review"
               customClasses="ml-auto"
-              handeler={() => setReviewModal(true)}
+              onclick={() => setReviewModal(true)}
             />
           </div>
           <div className="flex flex-col">

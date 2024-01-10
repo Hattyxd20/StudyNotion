@@ -1,8 +1,8 @@
 import { toast } from "react-hot-toast"
 
 import rzpLogo from "../../assets/Logo/rzp_logo.png"
-import { resetCart } from "../../slices/CartSlice"
-import { setPaymentLoading } from "../../slices/CourseSlice"
+import { resetCart } from "../../slices/cartSlice"
+import { setPaymentLoading } from "../../slices/courseSlice"
 import { apiConnector } from "../apiConnector"
 import { studentEndpoints } from "../apis"
 
@@ -28,7 +28,7 @@ function loadScript(src) {
 }
 
 // Buy the Course
-export async function buyCourse(
+export async function BuyCourse(
   token,
   courses,
   user_details,
@@ -71,9 +71,6 @@ export async function buyCourse(
       amount: `${orderResponse.data.data.amount}`,
       order_id: orderResponse.data.data.id,
       name: "StudyNotion",
-      theme:{
-         color:"#000000"
-      },
       description: "Thank you for Purchasing the Course.",
       image: rzpLogo,
       prefill: {
@@ -128,7 +125,6 @@ async function verifyPayment(bodyData, token, navigate, dispatch) {
 // Send the Payment Success Email
 async function sendPaymentSuccessEmail(response, amount, token) {
   try {
-    console.log(response)
     await apiConnector(
       "POST",
       SEND_PAYMENT_SUCCESS_EMAIL_API,

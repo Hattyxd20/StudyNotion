@@ -2,10 +2,8 @@ import { useState } from "react"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 import { useDispatch } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
-import { login } from "../../../services/operations/authApi"
-import { Tilt } from 'react-tilt'
 
-// import { login } from "../../../services/operations/authAPI"
+import { login } from "../../../services/operations/authAPI"
 
 function LoginForm() {
   const navigate = useNavigate()
@@ -31,14 +29,10 @@ function LoginForm() {
     dispatch(login(email, password, navigate))
   }
 
- return (
- <div className="w-full">
-   
-      
-    
+  return (
     <form
       onSubmit={handleOnSubmit}
-      className="mt-6 flex w-[95%] md:w-full flex-col gap-y-4"
+      className="mt-6 flex w-full flex-col gap-y-4"
     >
       <label className="w-full">
         <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
@@ -90,14 +84,7 @@ function LoginForm() {
         Sign In
       </button>
     </form>
-
-    
-    </div>
   )
-
-          }
-
- 
-    
+}
 
 export default LoginForm

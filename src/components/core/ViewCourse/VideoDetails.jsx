@@ -6,12 +6,13 @@ import "video-react/dist/video-react.css"
 import { useLocation } from "react-router-dom"
 import { BigPlayButton, Player } from "video-react"
 
-import { markLectureAsComplete } from "../../../services/operations/courseDetailsApi"
-import { updateCompletedLectures } from "../../../slices/ViewCourseSlice"
-import IconBtn from "../../common/Iconbtn"
+import { markLectureAsComplete } from "../../../services/operations/courseDetailsAPI"
+import { updateCompletedLectures } from "../../../slices/viewCourseSlice"
+import IconBtn from "../../Common/IconBtn"
 
 const VideoDetails = () => {
   const { courseId, sectionId, subSectionId } = useParams()
+  console.log("subSectionId here",subSectionId)
   const navigate = useNavigate()
   const location = useLocation()
   const playerRef = useRef(null)
@@ -40,7 +41,7 @@ const VideoDetails = () => {
           (data) => data._id === subSectionId
         )
         // console.log("filteredVideoData", filteredVideoData)
-        setVideoData(filteredVideoData[0])
+        setVideoData(filteredVideoData?.[0])
         setPreviewSource(courseEntireData.thumbnail)
         setVideoEnded(false)
       }
@@ -159,7 +160,7 @@ const VideoDetails = () => {
   const handleLectureCompletion = async () => {
     setLoading(true)
     const res = await markLectureAsComplete(
-      { courseId: courseId, subsectionId: subSectionId },
+      { courseId: courseId, subSectionId},
       token
     )
     if (res) {
@@ -194,17 +195,17 @@ const VideoDetails = () => {
               }}
               className="full absolute inset-0 z-[100] grid h-full place-content-center font-inter"
             >
-              {!completedLectures?.includes(subSectionId) && (
+              {!completedLectures.includes(subSectionId) && (
                 <IconBtn
                   disabled={loading}
-                  handeler={() => handleLectureCompletion()}
+                  onclick={() => handleLectureCompletion()}
                   text={!loading ? "Mark As Completed" : "Loading..."}
                   customClasses="text-xl max-w-max px-4 mx-auto"
                 />
               )}
               <IconBtn
                 disabled={loading}
-                handeler={() => {
+                onclick={() => {
                   if (playerRef?.current) {
                     // set the current time of the video to 0
                     playerRef?.current?.seek(0)

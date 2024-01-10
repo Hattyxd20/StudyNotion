@@ -1,24 +1,22 @@
-import React from 'react'
-import { ACCOUNT_TYPE } from '../../../utils/constants'
-import { toast } from 'react-hot-toast'
-import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import Tab from '../../common/Tab'
+import { useState } from "react"
+import { toast } from "react-hot-toast"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
-import { setSignupData } from '../../../slices/AuthSlice'
-import { sendOtp } from '../../../services/operations/authApi'
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
+import { sendOtp } from "../../../services/operations/authAPI"
+import { setSignupData } from "../../../slices/authSlice"
+import { ACCOUNT_TYPE } from "../../../utils/constants"
+import Tab from "../../Common/Tab"
 
+function SignupForm() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
+  // student or instructor
+  const [accountType, setAccountType] = useState(ACCOUNT_TYPE.STUDENT)
 
-const SignUpForm = () => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-   const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -26,9 +24,51 @@ const SignUpForm = () => {
     confirmPassword: "",
   })
 
-   const [accountType,setAccountType] = useState(ACCOUNT_TYPE.STUDENT)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-    const tabData = [
+  const { firstName, lastName, email, password, confirmPassword } = formData
+
+  // Handle input fields, when some value changes
+  const handleOnChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [e.target.name]: e.target.value,
+    }))
+  }
+
+  // Handle Form Submission
+  const handleOnSubmit = (e) => {
+    e.preventDefault()
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords Do Not Match")
+      return
+    }
+    const signupData = {
+      ...formData,
+      accountType,
+    }
+
+    // Setting signup data to state
+    // To be used after otp verification
+    dispatch(setSignupData(signupData))
+    // Send OTP to user for verification
+    dispatch(sendOtp(formData.email, navigate))
+
+    // Reset
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    })
+    setAccountType(ACCOUNT_TYPE.STUDENT)
+  }
+
+  // data to pass to Tab component
+  const tabData = [
     {
       id: 1,
       tabName: "Student",
@@ -40,59 +80,14 @@ const SignUpForm = () => {
       type: ACCOUNT_TYPE.INSTRUCTOR,
     },
   ]
-   
-   
 
-   const handleOnChange = (e) => {
-      setFormData((prev) => {
-           return {
-              ...prev,
-              [e.target.name]:e.target.value
-
-           }
-      })
-  }
-
-  const {firstName,lastName,email,password,confirmPassword} = formData
-
-  const handleOnSubmit = (e) => {
-        e.preventDefault();
-
-        if(password !== confirmPassword){
-            toast.error('Passwords Do Not Match')
-        }
-        const signUpData = {
-            ...formData,
-                accountType:accountType
-        }
-
-       dispatch(setSignupData(signUpData));
-       dispatch(sendOtp(signUpData.email,navigate));
-
-      setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    })
-    setAccountType(ACCOUNT_TYPE.STUDENT)
-
-
-
-
-  }
-
-  
-   
-
-  return (  
-    <div className='w-[95%] md:w-full'>
+  return (
+    <div>
       {/* Tab */}
       <Tab tabData={tabData} field={accountType} setField={setAccountType} />
       {/* Form */}
       <form onSubmit={handleOnSubmit} className="flex w-full flex-col gap-y-4">
-        <div className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 gap-x-4">
+        <div className="flex gap-x-4">
           <label>
             <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
               First Name <sup className="text-pink-200">*</sup>
@@ -101,7 +96,7 @@ const SignUpForm = () => {
               required
               type="text"
               name="firstName"
-              value={formData.firstName}
+              value={firstName}
               onChange={handleOnChange}
               placeholder="Enter first name"
               className="form-style w-full"
@@ -115,7 +110,7 @@ const SignUpForm = () => {
               required
               type="text"
               name="lastName"
-              value={formData.lastName}
+              value={lastName}
               onChange={handleOnChange}
               placeholder="Enter last name"
               className="form-style w-full"
@@ -130,13 +125,13 @@ const SignUpForm = () => {
             required
             type="text"
             name="email"
-            value={formData.email}
+            value={email}
             onChange={handleOnChange}
             placeholder="Enter email address"
             className="form-style w-full"
           />
         </label>
-        <div className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 gap-x-4">
+        <div className="flex gap-x-4">
           <label className="relative">
             <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
               Create Password <sup className="text-pink-200">*</sup>
@@ -145,7 +140,7 @@ const SignUpForm = () => {
               required
               type={showPassword ? "text" : "password"}
               name="password"
-              value={formData.password}
+              value={password}
               onChange={handleOnChange}
               placeholder="Enter Password"
               className="form-style w-full !pr-10"
@@ -169,7 +164,7 @@ const SignUpForm = () => {
               required
               type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
-              value={formData.confirmPassword}
+              value={confirmPassword}
               onChange={handleOnChange}
               placeholder="Confirm Password"
               className="form-style w-full !pr-10"
@@ -195,7 +190,6 @@ const SignUpForm = () => {
       </form>
     </div>
   )
-
 }
 
-export default SignUpForm
+export default SignupForm

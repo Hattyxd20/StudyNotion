@@ -1,31 +1,19 @@
-import { useDispatch } from "react-redux"
-import RenderSteps from "./RenderSteps";
-import { resetCourseState } from "../../../../slices/CourseSlice";
-import { useSelector } from "react-redux";
+import RenderSteps from "./RenderSteps"
 
-const AddCourse = () => {
-
-  
-  const dispatch = useDispatch();
-
-  dispatch(resetCourseState())
-
-  
-  
+export default function AddCourse() {
   return (
     <>
-
       <div className="flex w-full items-start gap-x-6">
         <div className="flex flex-1 flex-col">
           <h1 className="mb-14 text-3xl font-medium text-richblack-5">
-               Add Course
+            Add Course
           </h1>
           <div className="flex-1">
             <RenderSteps />
           </div>
         </div>
         {/* Course Upload Tips */}
-        <div className="sticky top-10 hidden max-w-[400px]  rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 xl:block">
+        <div className="sticky top-10 hidden max-w-[400px] flex-1 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 xl:block">
           <p className="mb-8 text-lg text-richblack-5">⚡ Course Upload Tips</p>
           <ul className="ml-5 list-item list-disc space-y-4 text-xs text-richblack-5">
             <li>Set the Course Price option or make it free.</li>
@@ -48,5 +36,3 @@ const AddCourse = () => {
     </>
   )
 }
-
-export default AddCourse
