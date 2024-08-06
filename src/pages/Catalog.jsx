@@ -13,7 +13,6 @@ import { getCatalogPageData } from "../services/operations/pageAndComponntDatas"
 import Error from "./Error"
 
 function Catalog() {
-  const { loading } = useSelector((state) => state.profile)
   const { catalogName } = useParams()
   const [active, setActive] = useState(1)
   const [catalogPageData, setCatalogPageData] = useState(null)
@@ -23,6 +22,7 @@ function Catalog() {
     ;(async () => {
       try {
         const res = await apiConnector("GET", categories.CATEGORIES_API)
+        console.log('categorie here',res);
         const category_id = res?.data?.data?.filter(
           (ct) => ct.name.split(" ").join("-").toLowerCase() === catalogName
         )[0]._id
@@ -31,7 +31,9 @@ function Catalog() {
         console.log("Could not fetch Categories.", error)
       }
     })()
-  }, [catalogName])
+  }, [catalogName]);
+
+
   useEffect(() => {
     if (categoryId) {
       ;(async () => {
@@ -45,14 +47,14 @@ function Catalog() {
     }
   }, [categoryId])
 
-  if (loading || !catalogPageData) {
+  if (!catalogPageData) {
     return (
       <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
         <div className="spinner"></div>
       </div>
     )
   }
-  if (!loading && !catalogPageData.success) {
+  if (!catalogPageData.success) {
     return <Error />
   }
 
